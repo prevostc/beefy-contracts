@@ -9,11 +9,12 @@ import { BeefyChain } from "../../utils/beefyChain";
 const registerSubsidy = require("../../utils/registerSubsidy");
 
 const {
-  platforms: { solarflare, beefyfinance },
+  platforms: { quickswap, beefyfinance },
   tokens: {
     TEL: { address: TEL },
     ETH: { address: ETH },
-    wETH: { address: wETH },
+    MATIC: { address: MATIC },
+    QUICK: { address: QUICK },
     USDT: { address: USDT },
     USDC: { address: USDC },
   },
@@ -21,37 +22,27 @@ const {
 
 const shouldVerifyOnEtherscan = false;
 
-const want = web3.utils.toChecksumAddress("0x26A2abD79583155EA5d34443b62399879D42748A");
-
-const vaultParams = {
-  mooName: "Moo Solarflare FLARE-GLMR",
-  mooSymbol: "mooSolarflareFLARE-GLMR",
-  delay: 21600,
+const params = {
+  strategyContractName: "StrategyQuickswapDualRewardLP",
+  want: web3.utils.toChecksumAddress("0xfc2fc983a411c4b1e238f7eb949308cf0218c750"), // TEL-ETH (LP address)
+  quickSwapRewardPool: web3.utils.toChecksumAddress("0xEda437364DCF8AB00f07b49bCc213CDf356b3962"),
+  strategist: web3.utils.toChecksumAddress("0xb7087497749f7a54D8BC2A0e30cc5fcB010f4152"), // metamask beefy dev
 };
 
-const strategyParams = {
-  want,
-  poolId: 0,
-  chef: solarflare.masterchef,
-  unirouter: solarflare.router,
-  strategist: "0xb2e4A61D99cA58fB8aaC58Bb2F8A59d63f552fC0", // some address
-  keeper: beefyfinance.keeper,
-  beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
-  outputToNativeRoute: [FLARE, GLMR],
-  outputToLp0Route: [FLARE, GLMR],
-  outputToLp1Route: [FLARE],
-  // pendingRewardsFunctionName: "pendingTri", // used for rewardsAvailable(), use correct function name from masterchef
+const vaultParams = {
+  mooName: "Moo QuickSwap TEL-ETH",
+  mooSymbol: "mooQuickSwapTEL-ETH",
+  delay: 21600,
 };
 
 const contractNames = {
   vault: "BeefyVaultV6",
-  strategy: "StrategySolarbeamV2",
+  strategy: params.strategyContractName,
 };
 
 async function main() {
   if (
     Object.values(vaultParams).some(v => v === undefined) ||
-    Object.values(strategyParams).some(v => v === undefined) ||
     Object.values(contractNames).some(v => v === undefined)
   ) {
     console.error("one of config values undefined");
@@ -85,17 +76,17 @@ async function main() {
   console.log("vault.deployed() OK");
 
   const strategyConstructorArguments = [
-    strategyParams.want,
-    strategyParams.poolId,
-    strategyParams.chef,
-    vault.address,
-    strategyParams.unirouter,
-    strategyParams.keeper,
-    strategyParams.strategist,
-    strategyParams.beefyFeeRecipient,
-    strategyParams.outputToNativeRoute,
-    strategyParams.outputToLp0Route,
-    strategyParams.outputToLp1Route,
+    /*address _want */ params.want,
+    /*address _rewardPool */ params.quickSwapRewardPool,
+    /*address _vault */ vault.address,
+    /*address _unirouter */ quickswap.router,
+    /*address _keeper */ beefyfinance.keeper,
+    /*address _strategist */ params.strategist,
+    /*address _beefyFeeRecipient */ beefyfinance.beefyFeeRecipient,
+    /* address[] memory _outputToNativeRoute */ [QUICK, MATIC],
+    /* address[] memory _rewardToNativeRoute */ [TEL, ETH, MATIC],
+    /* address[] memory _nativeToLp0Route */ [MATIC, ETH],
+    /* address[] memory _nativeToLp1Route */ [MATIC, ETH, TEL],
   ];
   console.log("Deploying strategy contract");
   console.log(strategyConstructorArguments);
@@ -110,8 +101,7 @@ async function main() {
   console.log();
   console.log("Vault:", vault.address);
   console.log("Strategy:", strategy.address);
-  console.log("Want:", strategyParams.want);
-  console.log("PoolId:", strategyParams.poolId);
+  console.log("Want:", params.want);
 
   console.log();
   console.log("Running post deployment");
@@ -126,8 +116,8 @@ async function main() {
   }
   // await setPendingRewardsFunctionName(strategy, strategyParams.pendingRewardsFunctionName);
   await setCorrectCallFee(strategy, hardhat.network.name as BeefyChain);
-  console.log(`Transfering Vault Owner to ${beefyfinance.vaultOwner}`);
-  await vault.transferOwnership(beefyfinance.vaultOwner);
+  // console.log(`Transfering Vault Owner to ${beefyfinance.vaultOwner}`);
+  // await vault.transferOwnership(beefyfinance.vaultOwner);
   console.log();
 
   await Promise.all(verifyContractsPromises);

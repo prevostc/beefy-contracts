@@ -32,11 +32,16 @@ describe("VaultLifecycleTest", () => {
     const strategyAddr = await vault.strategy();
     strategy = await ethers.getContractAt(config.strategyContract, strategyAddr);
 
+    console.log("TEST1");
     const unirouterAddr = await strategy.unirouter();
+    console.log("TEST2");
     const unirouterData = getUnirouterData(unirouterAddr);
+    console.log("TEST3");
     unirouter = await ethers.getContractAt(unirouterData.interface, unirouterAddr);
+    console.log("TEST4");
     want = await getVaultWant(vault, config.wnative);
 
+    console.log("NOPE");
     await zapNativeToToken({
       amount: config.testAmount,
       want,
@@ -74,20 +79,20 @@ describe("VaultLifecycleTest", () => {
     const vaultBal = await vault.balance();
     const pricePerShare = await vault.getPricePerFullShare();
     await delay(5000);
-  //  const callRewardBeforeHarvest = await strategy.callReward();
-  //  expect(callRewardBeforeHarvest).to.be.gt(0);
+    //  const callRewardBeforeHarvest = await strategy.callReward();
+    //  expect(callRewardBeforeHarvest).to.be.gt(0);
     await strategy.connect(keeper).managerHarvest();
     const vaultBalAfterHarvest = await vault.balance();
     const pricePerShareAfterHarvest = await vault.getPricePerFullShare();
-  //  const callRewardAfterHarvest = await strategy.callReward();
+    //  const callRewardAfterHarvest = await strategy.callReward();
 
     await vault.withdrawAll();
     const wantBalFinal = await want.balanceOf(deployer.address);
 
     expect(vaultBalAfterHarvest).to.be.gt(vaultBal);
     expect(pricePerShareAfterHarvest).to.be.gt(pricePerShare);
-  //  expect(callRewardBeforeHarvest).to.be.gt(callRewardAfterHarvest);
-    
+    //  expect(callRewardBeforeHarvest).to.be.gt(callRewardAfterHarvest);
+
     expect(wantBalFinal).to.be.gt(wantBalStart.mul(99).div(100));
 
     const lastHarvest = await strategy.lastHarvest();
@@ -209,7 +214,7 @@ describe("VaultLifecycleTest", () => {
     const callFee = await strategy.callFee();
 
     const expectedCallFee = chainCallFeeMap[chainName];
-    const actualCallFee = parseInt(callFee)
+    const actualCallFee = parseInt(callFee);
 
     expect(actualCallFee).to.equal(expectedCallFee);
   }).timeout(TIMEOUT);
@@ -219,7 +224,7 @@ describe("VaultLifecycleTest", () => {
 
     const withdrawalFee = await strategy.withdrawalFee();
     const actualWithdrawalFee = parseInt(withdrawalFee);
-    if(harvestOnDeposit) {
+    if (harvestOnDeposit) {
       expect(actualWithdrawalFee).to.equal(0);
     } else {
       expect(actualWithdrawalFee).not.to.equal(0);
