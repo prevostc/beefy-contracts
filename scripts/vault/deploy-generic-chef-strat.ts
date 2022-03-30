@@ -9,43 +9,42 @@ import { BeefyChain } from "../../utils/beefyChain";
 const registerSubsidy = require("../../utils/registerSubsidy");
 
 const {
-  platforms: { solarflare, beefyfinance },
+  platforms: { stellaswap, beefyfinance },
   tokens: {
-    TEL: { address: TEL },
-    ETH: { address: ETH },
-    wETH: { address: wETH },
-    USDT: { address: USDT },
-    USDC: { address: USDC },
+    //APE: { address: APE },
+    STELLA: { address: STELLA },
+    GLMR: { address: GLMR },
   },
-} = addressBook.polygon;
+} = addressBook.moonbeam;
+const APE = "0x3d632d9e1a60a0880dd45e61f279d919b5748377";
 
 const shouldVerifyOnEtherscan = false;
 
-const want = web3.utils.toChecksumAddress("0x26A2abD79583155EA5d34443b62399879D42748A");
+const want = web3.utils.toChecksumAddress("0x55db71e6beab323290f6571c428c171e15cdbad2");
 
 const vaultParams = {
-  mooName: "Moo Solarflare FLARE-GLMR",
-  mooSymbol: "mooSolarflareFLARE-GLMR",
+  mooName: "Moo Stellaswap APE-GLMR",
+  mooSymbol: "mooStellaswapAPE-GLMR",
   delay: 21600,
 };
 
 const strategyParams = {
   want,
-  poolId: 0,
-  chef: solarflare.masterchef,
-  unirouter: solarflare.router,
-  strategist: "0xb2e4A61D99cA58fB8aaC58Bb2F8A59d63f552fC0", // some address
+  poolId: 4, // find it in pool infos
+  chef: "0xf3a5454496e26ac57da879bf3285fa85debf0388", //stellaswap.masterchefV1distributorV2,
+  unirouter: stellaswap.router,
+  strategist: web3.utils.toChecksumAddress("0xb7087497749f7a54D8BC2A0e30cc5fcB010f4152"), // some address
   keeper: beefyfinance.keeper,
   beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
-  outputToNativeRoute: [FLARE, GLMR],
-  outputToLp0Route: [FLARE, GLMR],
-  outputToLp1Route: [FLARE],
-  // pendingRewardsFunctionName: "pendingTri", // used for rewardsAvailable(), use correct function name from masterchef
+  outputToNativeRoute: [STELLA, GLMR],
+  outputToLp0Route: [STELLA, GLMR, APE],
+  outputToLp1Route: [STELLA, GLMR],
+  pendingRewardsFunctionName: "pendingTokens", // used for rewardsAvailable(), use correct function name from masterchef
 };
 
 const contractNames = {
   vault: "BeefyVaultV6",
-  strategy: "StrategySolarbeamV2",
+  strategy: "StrategyCommonChefLP",
 };
 
 async function main() {
@@ -128,7 +127,7 @@ async function main() {
   await setCorrectCallFee(strategy, hardhat.network.name as BeefyChain);
   console.log(`Transfering Vault Owner to ${beefyfinance.vaultOwner}`);
   await vault.transferOwnership(beefyfinance.vaultOwner);
-  console.log();
+  console.log("Ownership transferred");
 
   await Promise.all(verifyContractsPromises);
 

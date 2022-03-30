@@ -44,49 +44,6 @@ want (LP pair):
 ### TEL ETH VAULT DEPLOY
 
 ```
-No need to generate any newer typings.
-Nothing to compile
-No need to generate any newer typings.
-Deploying: Moo QuickSwap TEL-ETH
-PredictedAddresses: {
-  vault: '0x3a5252cED60Dc299f4Cc037cF4a6DCD90609D7F7',
-  strategy: '0x0BDa2aA1D590C7E8C41BFE17d54f2d85866DF1e5'
-}
-Deploying vault contract
-Vault contract deployed
-Calling vault.deployed()
-vault.deployed() OK
-Deploying strategy contract
-[
-  '0xFc2fC983a411C4B1E238f7Eb949308CF0218C750',
-  '0xEda437364DCF8AB00f07b49bCc213CDf356b3962',
-  '0x3a5252cED60Dc299f4Cc037cF4a6DCD90609D7F7',
-  '0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff',
-  '0x340465d9D2EbDE78F15a3870884757584F97aBB4',
-  '0xb7087497749f7a54D8BC2A0e30cc5fcB010f4152',
-  '0x6FB16F7F2C1f1BDA14d4277530A92d4404b7Fb7e',
-  [
-    '0x831753DD7087CaC61aB5644b308642cc1c33Dc13',
-    '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
-  ],
-  [
-    '0xdF7837DE1F2Fa4631D716CF2502f8b230F1dcc32',
-    '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
-    '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
-  ],
-  [
-    '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
-    '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619'
-  ],
-  [
-    '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
-    '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
-    '0xdF7837DE1F2Fa4631D716CF2502f8b230F1dcc32'
-  ]
-]
-Strategy contract deployed
-Calling strategy.deplyed()
-strategy.deplyed() OK
 
 Vault: 0x3a5252cED60Dc299f4Cc037cF4a6DCD90609D7F7
 Strategy: 0x0BDa2aA1D590C7E8C41BFE17d54f2d85866DF1e5
@@ -95,4 +52,13 @@ Want: 0xFc2fC983a411C4B1E238f7Eb949308CF0218C750
 Running post deployment
 Setting call fee to '11'
 Transfering Vault Owner to 0x94A9D4d38385C7bD5715A2068D69B87FF81F4BF3
+```
+
+### APE GLMR DEPLOY
+
+```
+Vault: 0x77089478c41b6a8B29dDD6E3cb2F475475A228A5
+Strategy: 0x3a5252cED60Dc299f4Cc037cF4a6DCD90609D7F7
+Want: 0x55Db71E6bEaB323290f6571C428C171e15CDBAD2
+PoolId: 4
 ```
