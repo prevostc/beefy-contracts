@@ -5,6 +5,7 @@ import { setCorrectCallFee } from "../../utils/setCorrectCallFee";
 import { setPendingRewardsFunctionName } from "../../utils/setPendingRewardsFunctionName";
 import { verifyContract } from "../../utils/verifyContract";
 import { BeefyChain } from "../../utils/beefyChain";
+import BigNumber from "bignumber.js";
 
 const registerSubsidy = require("../../utils/registerSubsidy");
 
@@ -20,6 +21,9 @@ const APE = "0x3d632d9e1a60a0880dd45e61f279d919b5748377";
 
 const shouldVerifyOnEtherscan = false;
 
+const devWallet = web3.utils.toChecksumAddress(
+  process.env.DEPLOY_FROM_ADDRESS || "0x0000000000000000000000000000000000000000"
+);
 const want = web3.utils.toChecksumAddress("0x55db71e6beab323290f6571c428c171e15cdbad2");
 
 const vaultParams = {
@@ -33,7 +37,7 @@ const strategyParams = {
   poolId: 4, // find it in pool infos
   chef: "0xf3a5454496e26ac57da879bf3285fa85debf0388", //stellaswap.masterchefV1distributorV2,
   unirouter: stellaswap.router,
-  strategist: web3.utils.toChecksumAddress("0xb7087497749f7a54D8BC2A0e30cc5fcB010f4152"), // some address
+  strategist: devWallet,
   keeper: beefyfinance.keeper,
   beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
   outputToNativeRoute: [STELLA, GLMR],
@@ -56,7 +60,7 @@ async function main() {
     console.error("one of config values undefined");
     return;
   }
-
+  /*
   await hardhat.run("compile");
 
   const Vault = await ethers.getContractFactory(contractNames.vault);
@@ -97,7 +101,6 @@ async function main() {
     strategyParams.outputToLp1Route,
   ];
   console.log("Deploying strategy contract");
-  console.log(strategyConstructorArguments);
   const strategy = await Strategy.deploy(...strategyConstructorArguments);
   console.log("Strategy contract deployed");
 
@@ -135,6 +138,40 @@ async function main() {
     await registerSubsidy(vault.address, deployer);
     await registerSubsidy(strategy.address, deployer);
   }
+  */
+  ///*
+  // Vault: 0xfcA469222c9B8E959bF2d59e8776eE4d959d5a53
+  // Strategy: 0xD6b5d6Cf2763376d41a09Fad795c033F07782781
+  // Want: 0x55Db71E6bEaB323290f6571C428C171e15CDBAD2
+  const vault = {
+    //address: "0x77089478c41b6a8B29dDD6E3cb2F475475A228A5",
+    address: "0x03f35b8f0DC638A4B5FAbb775cf47a1Dce1E34b6",
+  };
+  //*/
+  // test the contract
+  const wantAbi = require("../../data/abi/ERC20.json");
+  const wantContract = new web3.eth.Contract(wantAbi, want);
+  const vaultAbi = require("../../artifacts/contracts/BIFI/vaults/BeefyVaultV6.sol/BeefyVaultV6.json").abi;
+  const vaultContract = new web3.eth.Contract(vaultAbi, vault.address);
+
+  const balance = await wantContract.methods.balanceOf(devWallet).call();
+  console.log({ balance: new BigNumber(balance).shiftedBy(-18).toString() });
+  await timeWrap();
+
+  const allowanceRes = await wantContract.methods.allowance(devWallet, vault.address).call();
+  console.log({ allowanceRes });
+  await timeWrap();
+
+  const approveRes = await wantContract.methods.approve(vault.address, balance).call({ sender: devWallet });
+  console.log({ approveRes });
+  await timeWrap();
+
+  const allowanceRes2 = await wantContract.methods.allowance(devWallet, vault.address).call();
+  console.log({ allowanceRes2 });
+  await timeWrap();
+
+  const depositRes = await vaultContract.methods.deposit(balance).call({ from: devWallet });
+  console.log({ depositRes });
 }
 
 main()
@@ -143,3 +180,8 @@ main()
     console.error(error);
     process.exit(1);
   });
+
+async function timeWrap(ms: number = 60000) {
+  await ethers.provider.send("evm_increaseTime", [ms]);
+  await ethers.provider.send("evm_mine", []);
+}

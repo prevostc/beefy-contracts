@@ -26,7 +26,7 @@ const params = {
   strategyContractName: "StrategyQuickswapDualRewardLP",
   want: web3.utils.toChecksumAddress("0xfc2fc983a411c4b1e238f7eb949308cf0218c750"), // TEL-ETH (LP address)
   quickSwapRewardPool: web3.utils.toChecksumAddress("0xEda437364DCF8AB00f07b49bCc213CDf356b3962"),
-  strategist: web3.utils.toChecksumAddress("0xb7087497749f7a54D8BC2A0e30cc5fcB010f4152"), // metamask beefy dev
+  strategist: web3.utils.toChecksumAddress(process.env.STRATEGIST_ADDRESS || "0x000"), // metamask beefy dev
 };
 
 const vaultParams = {

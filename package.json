@@ -18,6 +18,7 @@
     "net:bsc": "yarn net bsc",
     "compile": "hardhat compile",
     "ganache:bsc": "ganache-cli --fork ${BSC_RPC} --account=\"${DEPLOYER_PK}, 1000000000000000000000000\" --account=\"${KEEPER_PK}, 1000000000000000000000000\" --account=\"${UPGRADER_PK}, 1000000000000000000000000\" --account=\"${REWARDER_PK}, 1000000000000000000000000\"",
+    "ganache:moonbeam": "ganache-cli --fork ${MOONBEAM_RPC} --account=\"${DEPLOYER_PK}, 1000000000000000000000000\" --account=\"${KEEPER_PK}, 1000000000000000000000000\" --account=\"${UPGRADER_PK}, 1000000000000000000000000\" --account=\"${REWARDER_PK}, 1000000000000000000000000\"",
     "ganache:heco": "ganache-cli --fork ${HECO_RPC} --account=\"${DEPLOYER_PK}, 1000000000000000000000000\" --account=\"${KEEPER_PK}, 1000000000000000000000000\" --account=\"${UPGRADER_PK}, 1000000000000000000000000\" --account=\"${REWARDER_PK}, 1000000000000000000000000\"",
     "ganache:avax": "ganache-cli --fork ${AVAX_RPC} --account=\"${DEPLOYER_PK}, 1000000000000000000000000\" --account=\"${KEEPER_PK}, 1000000000000000000000000\" --account=\"${UPGRADER_PK}, 1000000000000000000000000\" --account=\"${REWARDER_PK}, 1000000000000000000000000\"",
     "ganache:polygon": "ganache-cli --fork ${POLYGON_RPC} --account=\"${DEPLOYER_PK}, 1000000000000000000000000\" --account=\"${KEEPER_PK}, 1000000000000000000000000\" --account=\"${UPGRADER_PK}, 1000000000000000000000000\" --account=\"${REWARDER_PK}, 1000000000000000000000000\"",
