@@ -1,3 +1,50 @@
+### Commands
+
+```
+
+export STRATEGIST_ADDRESS=0x0000000000000000000000000000000000000000
+export DEPLOY_FROM_ADDRESS=0x0000000000000000000000000000000000000000
+
+# mainnet hard fork
+NODE_OPTIONS=--max_old_space_size=4096 yarn net moonbeam  --fork-block-number 713832
+
+# Account impersonation
+curl --location --request POST 'localhost:8545' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "jsonrpc": "2.0",
+    "id": "1",
+    "method": "hardhat_impersonateAccount",
+    "params": ["'$STRATEGIST_ADDRESS'"]
+}'
+
+# deploy chef locally
+yarn deploy:chef localhost
+```
+
+### Deploy a contract on a local fork and debug it
+
+```
+export STRATEGIST_ADDRESS=0x0000000000000000000000000000000000000000
+export DEPLOY_FROM_ADDRESS=0x0000000000000000000000000000000000000000
+
+# run a ganache fork with some unlock addresses
+NODE_OPTIONS=--max_old_space_size=4096 yarn run ganache-cli \
+    --fork https://rpc.api.moonbeam.network \
+    --fork-block-number 713832 \
+    --unlock $STRATEGIST_ADDRESS \
+    --unlock $DEPLOY_FROM_ADDRESS \
+    --verbose
+
+# deploy contract on local fork
+yarn deploy:chef localhost
+
+# TODO: EDIT ProdVaultTest.t.sol
+
+# run forge tests
+forge test --fork-url http://127.0.0.1:8545  --match-contract ProdVaultTest --debug test_depositAndWithdraw
+```
+
 ## notes: (ex with MATIC-TEL)
 
 ```

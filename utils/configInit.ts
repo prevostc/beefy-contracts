@@ -20,7 +20,6 @@ export const getPKs = () => {
 };
 
 export const buildHardhatNetworkAccounts = (accounts: string[]) => {
-  
   const hardhatAccounts = accounts.map(pk => {
     // hardhat network wants 0x prefix in front of PK
     const accountConfig: HardhatNetworkAccountUserConfig = {
