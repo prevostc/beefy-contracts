@@ -8,6 +8,9 @@ remappings = [
     '@openzeppelin-2/=node_modules/@openzeppelin-2/',
     '@openzeppelin-4/=node_modules/@openzeppelin-4/',
     '@openzeppelin/=node_modules/@openzeppelin/',
+    '@beefy-contracts/=contracts/BIFI',
+    '@beefy-contracts-test/=forge/test',
+    'ds-test=node_modules/@ecmendenhall/ds-test/src',
 ]
 # libraries = []
 # cache = true

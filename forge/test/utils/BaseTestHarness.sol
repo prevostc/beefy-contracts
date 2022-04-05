@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
-import {DSTest} from "../forge/test.sol";
-import {Vm} from "../forge/Vm.sol";
-import {console} from "../forge/console.sol";
+import "ds-test/test.sol";
 
-import {IERC20Like} from "../interfaces/IERC20Like.sol";
+import {IERC20} from "@openzeppelin-4/contracts/token/ERC20/IERC20.sol";
+import {Vm} from "@beefy-contracts-test/forge/Vm.sol";
+import {console} from "@beefy-contracts-test/forge/console.sol";
+
 
 contract BaseTestHarness is DSTest {
     // Api to modify test vm state.
@@ -16,7 +17,7 @@ contract BaseTestHarness is DSTest {
     /*             */
 
     function modifyBalance(address token_, address user_, uint256 amount_) internal returns (uint256 slot_) {
-        IERC20Like erc20 = IERC20Like(token_);
+        IERC20 erc20 = IERC20(token_);
         bool found;
         for (uint256 i = 0; i < 10; i++) {  
             // Get before value in case the slot is wrong, so can restore the value.

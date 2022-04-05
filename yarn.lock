@@ -47,6 +47,11 @@
   dependencies:
     "@cspotcode/source-map-consumer" "0.8.0"
 
+"@ecmendenhall/ds-test@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@ecmendenhall/ds-test/-/ds-test-0.0.1.tgz#e3b4069f1ab6f0680690181a760bd0a1a22fc95d"
+  integrity sha512-kQ4fjfjhAV5yTw4aC8yBImSaKIq9QFq5GOTRSW1LdQ9Cfbmq+g0WYxbSmrejX4nkC1sxr05Lo3Td1hJ2e9U5bg==
+
 "@ensdomains/ens@^0.4.4":
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/@ensdomains/ens/-/ens-0.4.5.tgz#e0aebc005afdc066447c6e22feb4eda89a5edbfc"
