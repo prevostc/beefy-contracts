@@ -17,38 +17,41 @@ const {
     GLMR: { address: GLMR },
   },
 } = addressBook.moonbeam;
-const APE = "0x3d632d9e1a60a0880dd45e61f279d919b5748377";
+stellaswap.routerv2 = "0x70085a09d30d6f8c4ecf6ee10120d1847383bb57";
+
+const BCMC = "0x8ECE0D14d619fE26e2C14C4a92c2F9E8634A039E";
 
 const shouldVerifyOnEtherscan = false;
 
-const devWallet = web3.utils.toChecksumAddress(
-  process.env.DEPLOY_FROM_ADDRESS || "0x0000000000000000000000000000000000000000"
+const rewardsWallet = web3.utils.toChecksumAddress(
+  process.env.STRATEGIST_ADDRESS || "0x0000000000000000000000000000000000000000"
 );
-const want = web3.utils.toChecksumAddress("0x55db71e6beab323290f6571c428c171e15cdbad2");
+const want = web3.utils.toChecksumAddress("0x6f71389426efe6ff4e357ca6dd012b210a6a3c9c");
 
 const vaultParams = {
-  mooName: "Moo Stellaswap APE-GLMR",
-  mooSymbol: "mooStellaswapAPE-GLMR",
+  mooName: "Moo Stellaswap BCMC-GLMR",
+  mooSymbol: "mooStellaswapBCMC-GLMR",
   delay: 21600,
 };
 
 const strategyParams = {
   want,
-  poolId: 4, // find it in pool infos
-  chef: "0xf3a5454496e26ac57da879bf3285fa85debf0388", //stellaswap.masterchefV1distributorV2,
-  unirouter: stellaswap.router,
-  strategist: devWallet,
+  poolId: 2, // find it in pool infos
+  //chef: stellaswap.masterchefV1distributorV2,
+  unirouter: stellaswap.routerv2,
+  strategist: rewardsWallet,
   keeper: beefyfinance.keeper,
   beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
   outputToNativeRoute: [STELLA, GLMR],
-  outputToLp0Route: [STELLA, GLMR, APE],
+  secondOutputToOutputRoute: [BCMC, GLMR, STELLA],
+  outputToLp0Route: [STELLA, GLMR, BCMC],
   outputToLp1Route: [STELLA, GLMR],
   pendingRewardsFunctionName: "pendingTokens", // used for rewardsAvailable(), use correct function name from masterchef
 };
 
 const contractNames = {
   vault: "BeefyVaultV6",
-  strategy: "StrategyCommonChefLP",
+  strategy: "StrategyCommonMultiRewardPoolLP",
 };
 
 async function main() {
@@ -60,7 +63,7 @@ async function main() {
     console.error("one of config values undefined");
     return;
   }
-  /*
+
   await hardhat.run("compile");
 
   const Vault = await ethers.getContractFactory(contractNames.vault);
@@ -90,13 +93,13 @@ async function main() {
   const strategyConstructorArguments = [
     strategyParams.want,
     strategyParams.poolId,
-    strategyParams.chef,
     vault.address,
     strategyParams.unirouter,
     strategyParams.keeper,
     strategyParams.strategist,
     strategyParams.beefyFeeRecipient,
     strategyParams.outputToNativeRoute,
+    strategyParams.secondOutputToOutputRoute,
     strategyParams.outputToLp0Route,
     strategyParams.outputToLp1Route,
   ];
@@ -138,8 +141,8 @@ async function main() {
     await registerSubsidy(vault.address, deployer);
     await registerSubsidy(strategy.address, deployer);
   }
-  */
-  ///*
+
+  /*
   // Vault: 0xfcA469222c9B8E959bF2d59e8776eE4d959d5a53
   // Strategy: 0xD6b5d6Cf2763376d41a09Fad795c033F07782781
   // Want: 0x55Db71E6bEaB323290f6571C428C171e15CDBAD2
@@ -147,7 +150,8 @@ async function main() {
     //address: "0x77089478c41b6a8B29dDD6E3cb2F475475A228A5",
     address: "0x03f35b8f0DC638A4B5FAbb775cf47a1Dce1E34b6",
   };
-  //*/
+  */
+  /*
   // test the contract
   const wantAbi = require("../../data/abi/ERC20.json");
   const wantContract = new web3.eth.Contract(wantAbi, want);
@@ -172,6 +176,7 @@ async function main() {
 
   const depositRes = await vaultContract.methods.deposit(balance).call({ from: devWallet });
   console.log({ depositRes });
+   */
 }
 
 main()
